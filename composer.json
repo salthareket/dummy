@@ -1,0 +1,21 @@
+{
+	"config": {
+        "disable-tls": true,
+		"allow-plugins": {
+			"composer/installers": true
+		}
+    },
+    "autoload": {
+        "psr-4": {
+            "SaltHareket\\": "src/"
+        }
+    },
+    "require": {
+    	"composer/composer": "^2.0",
+		"salthareket/theme": "^1.1",
+		"scssphp/scssphp": "^1.13"
+    },
+	"require-dev": {
+		"php-parallel-lint/php-parallel-lint": "^1.4"
+	}
+}
