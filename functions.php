@@ -2,8 +2,6 @@
 ini_set("display_errors", 1);
 error_reporting(~0);
 
-define("SALTHAREKET_TOKEN", "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");
-
 if (file_exists(__DIR__ . "/vendor/autoload.php")) {
     require __DIR__ . "/vendor/autoload.php";
 }
