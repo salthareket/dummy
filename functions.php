@@ -5,7 +5,8 @@ error_reporting(~0);
 if (file_exists(__DIR__ . "/vendor/autoload.php")) {
     require_once __DIR__ . "/vendor/autoload.php";
 }else{
-    require_once __DIR__ . "/composer/bootstrap.php";
+    require_once __DIR__ . '/composer/Composer/Autoload/ClassLoader.php';
+    require_once __DIR__ . '/composer/Composer/Console/Application.php';
     require_once __DIR__ . "/composer/install.php";
     Install::init();
 }
