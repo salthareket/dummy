@@ -147,7 +147,7 @@ class Install {
         }, 999); // Geç bir öncelik ile çalıştır
     }
 
-    public sttaic function init(){
+    public static function init(){
     	self::composer("salthareket/theme");
     }
 
