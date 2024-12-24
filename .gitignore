@@ -49,5 +49,3 @@ wp-config.php
 /node_modules/
 
 # Ignore Composer Dependencies (if applicable)
-/vendor/
-composer.lock
