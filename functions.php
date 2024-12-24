@@ -21,7 +21,7 @@ if (class_exists('SaltHareket\Theme')) {
   update_option('sh_theme_status', false);
   update_option('sh_theme_tasks_status', []);
   add_filter("template_include", function ($template) {
-       return get_template_directory() . '/static/no-theme.html';
+    return get_template_directory() . '/static/no-theme.html';
   });
 }
 
