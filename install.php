@@ -98,7 +98,7 @@ class Install {
 
         ?>
         <div class="wrap">
-            <h1>Installation Required</h1>
+            <h1>Salthareket/Theme Installation</h1>
 
             <div style="display:flex;flex-direction:column;align-items:center;justify-content: center;height:100vh; text-align:center;">
                 <div style="width:60%;">
@@ -148,7 +148,22 @@ class Install {
     }
 
     public static function init(){
-    	self::composer("salthareket/theme");
+    	//self::composer("salthareket/theme");
+
+        if (is_admin()) {
+            $current_page = $_GET['page'] ?? '';
+            if ($current_page !== 'update-theme') {
+                wp_safe_redirect(admin_url('admin.php?page=install-theme'));
+                exit;
+            }
+        } else {
+            wp_die(
+                sprintf(
+                    '<h2 class="text-danger">Warning</h2>The theme setup is not complete. Please complete the installation from the <a href="%s">Install Salthareket/Theme</a>.',
+                     esc_url(admin_url('admin.php?page=install-theme'))
+                )
+            );
+        }
     }
 
 }
