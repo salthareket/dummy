@@ -117,7 +117,6 @@ class Install {
     }
 
     public static function menu() {
-        // Ana menü oluştur
         add_menu_page(
             'Theme Settings',
             'Theme Settings',
