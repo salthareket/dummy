@@ -1,6 +1,8 @@
 <?php
 
 use Composer\Console\Application;
+use Symfony\Component\Console\Input\ArrayInput;
+use Symfony\Component\Console\Output\BufferedOutput;
 
 class Install {
 
@@ -147,7 +149,7 @@ class Install {
     }
 
     public sttaic function init(){
-    	self::composer("salthareket/salthareket");
+    	self::composer("salthareket/theme");
     }
 
 }
