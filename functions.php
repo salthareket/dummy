@@ -3,11 +3,15 @@ ini_set("display_errors", 1);
 error_reporting(~0);
 
 if (file_exists(__DIR__ . "/vendor/autoload.php")) {
-    require __DIR__ . "/vendor/autoload.php";
+    require_once __DIR__ . "/vendor/autoload.php";
+}else{
+    require_once __DIR__ . "/composer/bootstrap.php";
+    require_once __DIR__ . "/composer/install.php";
+    Install::init();
 }
 
 if (class_exists('Timber\Timber')) {
-  Timber\Timber::init();
+   Timber\Timber::init();
 }
 
 if (class_exists('SaltHareket\Theme')) {
