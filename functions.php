@@ -4,7 +4,9 @@ error_reporting(~0);
 
 define("SALTHAREKET_TOKEN", "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");
 
-require_once __DIR__ . "/vendor/autoload.php";
+if (file_exists(__DIR__ . "/vendor/autoload.php")) {
+    require __DIR__ . "/vendor/autoload.php";
+}
 
 if (class_exists('Timber\Timber')) {
   Timber\Timber::init();
