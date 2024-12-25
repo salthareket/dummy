@@ -91,7 +91,7 @@ class Install {
                 <div style="width:60%;">
                     <h2 style="font-weight:600;font-size:42px;line-height:1;margin-bottom:20px;"><small style="display:block;font-size:12px;font-weight:bold;margin-bottom:10px;background-color:#111;color:#ddd;padding:8px 12px;border-radius:22px;display:inline-block;">STEP 1</small><br>Install Packages</h2>
                     <p>This theme requires some initial setup before you can start using it. Please complete the installation process below.</p>
-                    <div class="alert alert-dismissible rounded-3 w-25 fade d-none" data-action="update"></div>
+                    <div class="alert alert-dismissible rounded-3 fade d-none" data-action="update"></div>
                     <div class="installation-status" style="text-align:center;font-size: 22px;font-weight:bold;margin-top:20px;display:none;"></div>
                     <button id="install-theme-button" class="button button-primary" style="margin-top:40px;font-size: 18px;border-radius: 22px;border: none;padding: 6px 28px;">Start Installation</button>
                 </div>

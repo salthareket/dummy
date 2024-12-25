@@ -37,7 +37,7 @@ jQuery(document).ready(function ($) {
     }
     $('#install-theme-button').on('click', function () {
         var $button = $(this);
-        $button.prop('disabled', true).text('Updating...');
+        $button.prop('disabled', true).text('Installing...');
 
         composer_message("", "loading", "update");
 
@@ -55,11 +55,11 @@ jQuery(document).ready(function ($) {
                 } else {
                     composer_message(response.data.message, "error", "update");
                 }
-                $button.prop('disabled', false).text('Start Installation');
+                $button.text('Please wait...');
             },
             error: function () {
                 composer_message('AJAX request failed.', "error", "update");
-                $button.prop('disabled', false).text('Start Installation');
+                $button.prop('disabled', false).text('Start Installation Again');
             }
         });
     });
