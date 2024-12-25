@@ -113,6 +113,7 @@ const staticSafelist = [
     /^lg-/,
     /^icon-/,
     /^label-/,
+    /^slinky-/,
 ];
 const combinedSafelist = [...dynamicSafelist, ...staticSafelist];
 
