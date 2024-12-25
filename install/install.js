@@ -51,6 +51,7 @@ jQuery(document).ready(function ($) {
             success: function (response) {
                 if (response.success) {
                     composer_message(response.data.message, response.data.action, "update");
+                    location.reload();
                 } else {
                     composer_message(response.data.message, "error", "update");
                 }

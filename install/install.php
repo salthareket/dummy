@@ -142,10 +142,43 @@ class Install {
         }, 999); // Geç bir öncelik ile çalıştır
     }
 
+    private static function fix(){
+        if (class_exists('SaltHareket\Theme')) {
+            $fixes = include get_template_directory() . "/vendor/salthareket/theme/src/fix/index.php";
+            if($fixes){
+                foreach($fixes as $fix){
+                    $file = get_template_directory() . "/vendor/salthareket/theme/src/fix/".$fix["file"];
+                    $target_file = get_template_directory()."/vendor/".$fix["target"].$fix["file"];
+                    if($fix["status"] && file_exists($file)){
+                        self::fileCopy($file, $target_file);
+                    }
+                }
+            }
+        }        
+    }
+
     public static function install_theme_package(){
         check_ajax_referer('install_theme_nonce', '_ajax_nonce');
         self::composer("salthareket/theme");
+        self::fix();
         wp_send_json_success(['message' => 'Theme package installed successfully.', 'action' => 'install']);
+    }
+
+    private static function fileCopy($source, $destination) {
+        if (!file_exists($source)) {
+            return;
+        }
+        $destinationDir = dirname($destination);
+        if (!file_exists($destinationDir)) {
+            if (!mkdir($destinationDir, 0777, true)) {
+                return;
+            }
+        }
+        if (copy($source, $destination)) {
+
+        } else {
+            return;
+        }
     }
 
     private static function enqueue_install_script() {
