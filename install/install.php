@@ -6,14 +6,10 @@ use Symfony\Component\Console\Output\BufferedOutput;
 
 class Install {
 
-	function __construct(){
-        add_action('admin_menu', [$this, 'menu']);
-    }
-
-	public static function composer($package_name="", $remove = false) {
+    public static function composer($package_name="", $remove = false) {
         try {
 
-        	$theme_root = get_template_directory();
+            $theme_root = get_template_directory();
             $composer_path = $theme_root . '/composer.json';
 
             if (!file_exists($composer_path)) {
@@ -86,7 +82,6 @@ class Install {
     }
 
     public static function render_installation_page() {
-        // Bootstrap CSS'yi sadece bu sayfa için yükle
         add_action('admin_enqueue_scripts', function () {
             wp_enqueue_style(
                 'bootstrap-css',
@@ -102,18 +97,18 @@ class Install {
 
             <div style="display:flex;flex-direction:column;align-items:center;justify-content: center;height:100vh; text-align:center;">
                 <div style="width:60%;">
-                    <h2 style="font-weight:600;font-size:42px;line-height:1;margin-bottom:20px;">Install Requirements</h2>
+                    <h2 style="font-weight:600;font-size:42px;line-height:1;margin-bottom:20px;"><small style="display:block;font-size:12px;font-weight:bold;margin-bottom:10px;background-color:#111;color:#ddd;padding:8px 12px;border-radius:22px;display:inline-block;">STEP 1</small><br>Install Packages</h2>
                     <p>This theme requires some initial setup before you can start using it. Please complete the installation process below.</p>
-                    <div class="progress my-4" style="height: 30px;display:none;">
-                        <div id="installation-progress" class="progress-bar progress-bar-striped progress-bar-animated text-end pe-3" role="progressbar" style="width: 0%;height:100%;background-color:#fff;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">0%</div>
-                    </div>
+                    <div class="alert alert-dismissible rounded-3 w-25 fade d-none" data-action="update"></div>
                     <div class="installation-status" style="text-align:center;font-size: 22px;font-weight:bold;margin-top:20px;display:none;"></div>
-                    <button id="start-installation-button" class="button button-primary" style="margin-top:40px;font-size: 18px;border-radius: 22px;border: none;padding: 6px 28px;">Start Installation</button>
+                    <button id="install-theme-button" class="button button-primary" style="margin-top:40px;font-size: 18px;border-radius: 22px;border: none;padding: 6px 28px;">Start Installation</button>
                 </div>
             </div>
         </div>
 
         <?php
+
+        self::enqueue_install_script();
     }
 
     public static function menu() {
@@ -133,7 +128,7 @@ class Install {
             'Theme Install',
             'Theme Install',
             'manage_options',
-            'install-theme',
+            'install-packages',
             ['Install', 'render_installation_page'] // Theme Update içeriğini render et
         );
 
@@ -147,23 +142,48 @@ class Install {
         }, 999); // Geç bir öncelik ile çalıştır
     }
 
-    public static function init(){
-    	//self::composer("salthareket/theme");
+    public static function install_theme_package(){
+        check_ajax_referer('install_theme_nonce', '_ajax_nonce');
+        self::composer("salthareket/theme");
+        wp_send_json_success(['message' => 'Theme package installed successfully.', 'action' => 'install']);
+    }
 
+    private static function enqueue_install_script() {
+        wp_enqueue_script(
+            'install-theme-script',
+            get_template_directory_uri() . '/install/install.js',
+            ['jquery'],
+            '1.0',
+            true
+        );
+
+        $args = [
+            'ajax_url' => admin_url('admin-ajax.php'),
+            'nonce' => wp_create_nonce('install_theme_nonce')
+        ];
+        wp_localize_script('install-theme-script', 'installAjax', $args);
+    }
+
+    public static function init(){
+        
+        
         if (is_admin()) {
-            $current_page = $_GET['page'] ?? '';
-            if ($current_page !== 'install-theme') {
-                wp_safe_redirect(admin_url('admin.php?page=install-theme'));
-                exit;
+            add_action('admin_menu', [__CLASS__, 'menu']);
+            add_action('wp_ajax_install_theme_package', [__CLASS__, 'install_theme_package']);
+            if (!(defined('DOING_AJAX') && DOING_AJAX)) {
+                $current_page = $_GET['page'] ?? '';
+                if ($current_page !== 'install-packages') {
+                    wp_safe_redirect(admin_url('admin.php?page=install-packages'));
+                    exit;
+                }
             }
         } else {
             wp_die(
                 sprintf(
                     '<h2 class="text-danger">Warning</h2>The theme setup is not complete. Please complete the installation from the <a href="%s">Install Salthareket/Theme</a>.',
-                     esc_url(admin_url('admin.php?page=install-theme'))
+                     esc_url(admin_url('admin.php?page=install-packages'))
                 )
             );
         }
     }
-
 }

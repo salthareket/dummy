@@ -16,7 +16,7 @@ if (class_exists('SaltHareket\Theme')) {
 }else{
   update_option('sh_theme_status', false);
   update_option('sh_theme_tasks_status', []);
-  require_once __DIR__ . "/install.php";
+  require_once __DIR__ . "/install/install.php";
   Install::init();
   add_filter("template_include", function ($template) {
     return get_template_directory() . '/static/no-theme.html';
