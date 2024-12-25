@@ -152,7 +152,7 @@ class Install {
 
         if (is_admin()) {
             $current_page = $_GET['page'] ?? '';
-            if ($current_page !== 'update-theme') {
+            if ($current_page !== 'install-theme') {
                 wp_safe_redirect(admin_url('admin.php?page=install-theme'));
                 exit;
             }
