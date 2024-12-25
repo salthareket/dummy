@@ -82,15 +82,7 @@ class Install {
     }
 
     public static function render_installation_page() {
-        add_action('admin_enqueue_scripts', function () {
-            wp_enqueue_style(
-                'bootstrap-css',
-                'https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css',
-                [],
-                '5.3.3'
-            );
-        });
-
+        echo '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css" type="text/css" media="all" />';
         ?>
         <div class="wrap">
             <h1>Salthareket/Theme Installation</h1>
@@ -145,6 +137,7 @@ class Install {
     private static function fix(){
         if (class_exists('SaltHareket\Theme')) {
             $fixes = include get_template_directory() . "/vendor/salthareket/theme/src/fix/index.php";
+            error_log(json_encode($fixes));
             if($fixes){
                 foreach($fixes as $fix){
                     $file = get_template_directory() . "/vendor/salthareket/theme/src/fix/".$fix["file"];
@@ -174,11 +167,7 @@ class Install {
                 return;
             }
         }
-        if (copy($source, $destination)) {
-
-        } else {
-            return;
-        }
+        copy($source, $destination);
     }
 
     private static function enqueue_install_script() {
