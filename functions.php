@@ -11,16 +11,18 @@ if (class_exists('Timber\Timber')) {
 }
 
 if (class_exists('SaltHareket\Theme')) {
-   $theme = new SaltHareket\Theme();
-   $theme->init();
+    require_once __DIR__ . "/install/update.php";
+    Update::init();
+    $theme = new SaltHareket\Theme();
+    $theme->init();
 }else{
-  update_option('sh_theme_status', false);
-  update_option('sh_theme_tasks_status', []);
-  require_once __DIR__ . "/install/install.php";
-  Install::init();
-  add_filter("template_include", function ($template) {
-    return get_template_directory() . '/static/no-theme.html';
-  });
+    update_option('sh_theme_status', false);
+    update_option('sh_theme_tasks_status', []);
+    require_once __DIR__ . "/install/install.php";
+    Install::init();
+    add_filter("template_include", function ($template) {
+       return get_template_directory() . '/static/no-theme.html';
+    });
 }
 
 error_log("yuklendim yine...");
