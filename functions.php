@@ -11,8 +11,6 @@ if (class_exists('Timber\Timber')) {
 }
 
 if (class_exists('SaltHareket\Theme')) {
-    require_once __DIR__ . "/install/update.php";
-    Update::init();
     $theme = new SaltHareket\Theme();
     $theme->init();
 }else{
