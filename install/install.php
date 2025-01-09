@@ -135,19 +135,22 @@ class Install {
     }
 
     private static function fix(){
-        if (class_exists('SaltHareket\Theme')) {
-            $fixes = include get_template_directory() . "/vendor/salthareket/theme/src/fix/index.php";
+        //if (class_exists('SaltHareket\Theme')) {
+        $fixes_file = get_template_directory() . "/vendor/salthareket/theme/src/fix/index.php";
+        if(file_exists($fixes_file)){
+            $fixes = include $fixes_file;
             error_log(json_encode($fixes));
             if($fixes){
                 foreach($fixes as $fix){
                     $file = get_template_directory() . "/vendor/salthareket/theme/src/fix/".$fix["file"];
                     $target_file = get_template_directory()."/vendor/".$fix["target"].$fix["file"];
-                    if($fix["status"] && file_exists($file)){
+                    if($fix["status"] && file_exists($file) && file_exists($target_file)){
                         self::fileCopy($file, $target_file);
                     }
                 }
             }
-        }        
+        }
+        //}        
     }
 
     public static function install_theme_package(){
