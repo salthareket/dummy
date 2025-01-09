@@ -73,6 +73,8 @@ class Install {
             }else{
                 $message = 'No updates or installations performed.';
             }
+
+            self::fix();
             
             wp_send_json_success(['message' => $message, "action" => $action ]);
 
@@ -156,7 +158,6 @@ class Install {
     public static function install_theme_package(){
         check_ajax_referer('install_theme_nonce', '_ajax_nonce');
         self::composer("salthareket/theme");
-        self::fix();
         wp_send_json_success(['message' => 'Theme package installed successfully.', 'action' => 'install']);
     }
 
