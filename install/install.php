@@ -74,8 +74,6 @@ class Install {
                 $message = 'No updates or installations performed.';
             }
 
-            self::fix();
-            
             wp_send_json_success(['message' => $message, "action" => $action ]);
 
         } catch (Exception $e) {
@@ -136,24 +134,7 @@ class Install {
         }, 999); // Geç bir öncelik ile çalıştır
     }
 
-    private static function fix(){
-        //if (class_exists('SaltHareket\Theme')) {
-        $fixes_file = get_template_directory() . "/vendor/salthareket/theme/src/fix/index.php";
-        if(file_exists($fixes_file)){
-            $fixes = include $fixes_file;
-            error_log(json_encode($fixes));
-            if($fixes){
-                foreach($fixes as $fix){
-                    $file = get_template_directory() . "/vendor/salthareket/theme/src/fix/".$fix["file"];
-                    $target_file = get_template_directory()."/vendor/".$fix["target"].$fix["file"];
-                    if($fix["status"] && file_exists($file) && file_exists($target_file)){
-                        self::fileCopy($file, $target_file);
-                    }
-                }
-            }
-        }
-        //}        
-    }
+    
 
     public static function install_theme_package(){
         check_ajax_referer('install_theme_nonce', '_ajax_nonce');
@@ -191,7 +172,6 @@ class Install {
     }
 
     public static function init(){
-        
         
         if (is_admin()) {
             add_action('admin_menu', [__CLASS__, 'menu']);

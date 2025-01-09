@@ -1,6 +1,6 @@
 {
 	"name": "salthareket/dummy",
-    "version": "1.2.1",
+    "version": "1.2.2",
     "description": "Dummy theme",
     "license": "MIT",
     "type": "library",
@@ -17,7 +17,7 @@
     },
     "require": {
     	"composer/composer": "^2.0",
-		"salthareket/theme": "*"
+		"salthareket/theme": "^1.8"
     },
 	"require-dev": {
 		"php-parallel-lint/php-parallel-lint": "^1.4"
