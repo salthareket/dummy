@@ -2,7 +2,7 @@
 	<div class="row">
 		<div class="col-image col-auto d-none d-md-block">
 			<a href="{{post.link}}" title="{{post.title}}" class="btn-loading-page">
-			     <img data-src="{% if post.thumbnail %}{{post.thumbnail.src('thumbnail')}}{% else %}{{theme.link ~ '/static/img/not-found.png'}}{% endif %}" class="img-fluid lazy rounded-3" alt="{{post.title}}" width="150" height="150" />
+			     <img data-src="{% if post.thumbnail %}{{post.thumbnail.src('thumbnail')}}{% endif %}" class="img-placeholder img-fluid lazy rounded-3 overflow-hidden {% if post.thumbnail and not is_preview %}loading{% else %}img-not-found{% endif %}" alt="{{post.title}}" width="150" height="150" />
 			</a>
 	    </div>
 	    <div class="col-content col">
