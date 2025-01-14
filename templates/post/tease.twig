@@ -3,7 +3,7 @@
 	
 		<a href="{{post.link}}" title="{{ post.title }}" class="img-placeholder ratio ratio-16x9 mb-3 d-block rounded-4 overflow-hidden {% if post.thumbnail and not is_preview %}loading{% else %}img-not-found{% endif %} btn-loading-page" {% if post.thumbnail %}style="background-color:{{post.thumbnail.average_color}}"{% endif %}>
 		    {% if post.thumbnail %}
-		    	{{img({src: post.thumbnail, class : "object-fit-cover w-100 h-100", lazy: not is_preview })}}
+		    	{{post.get_thumbnail({class : "object-fit-cover w-100 h-100", lazy: not is_preview})}}
 			{% endif %}
 		</a>
 
