@@ -10,10 +10,14 @@ if (class_exists('Timber\Timber')) {
    Timber\Timber::init();
 }
 
-if (class_exists('SaltHareket\Theme')) {
+if (file_exists(__DIR__ . "/vendor/salthareket/theme/src/theme.php")) {
+    if (!class_exists('SaltHareket\Theme')) {
+        require __DIR__ . "/vendor/salthareket/theme/bootstrap.php";
+    }
     $theme = new SaltHareket\Theme();
     $theme->init();
 }else{
+    error_log("SaltHareket\Theme yooooooooookk");
     update_option('sh_theme_status', false);
     update_option('sh_theme_tasks_status', []);
     require_once __DIR__ . "/install/install.php";
@@ -21,7 +25,8 @@ if (class_exists('SaltHareket\Theme')) {
     add_filter("template_include", function ($template) {
        return get_template_directory() . '/static/no-theme.html';
     });
-}
+}  
+
 
 error_log("yuklendim yine...");
 
