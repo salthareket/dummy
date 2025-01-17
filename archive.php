@@ -20,8 +20,6 @@ namespace App;
 use Timber\Timber;
 
 
-
-
 global $wp_query;
 $args;
 $templates = array( 'post/archive.twig', 'index.twig' );

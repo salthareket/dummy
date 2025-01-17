@@ -13,20 +13,19 @@
  * @since   Timber 0.1
  */
 
-//global $wp_query;
+/*
+use Timber\Timber;
 
-$context          = Timber::context();
-//$context["query_vars"] = ($wp_query->query_vars);
-$context['posts']= Timber::get_posts();
-$templates        = array( 'post/archive.twig' );
-$context['categories'] = Timber::get_terms([
-    'taxonomy' =>  'category',
-    'hide_empty' => false,
-]);
-$context["tags"] = wp_tag_cloud(array(
-   'number' => 20,
-   'post_type' => 'post',
-   'echo' => false
-));
+$templates = [ 'templates/index.twig' ];
 
-Timber::render( $templates, $context );
+if ( is_home() ) {
+   array_unshift( $templates, 'templates/front-page.twig', 'templates/home.twig' );
+}
+
+$context = Timber::context(
+   [
+      'foo' => 'bar',
+   ]
+);
+
+Timber::render( $templates, $context );*/

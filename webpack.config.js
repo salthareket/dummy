@@ -12,7 +12,8 @@ const paths = [
     path.join(__dirname, '../../plugins/**/*.php'),
     path.join(__dirname, '**/*.php'),
     path.join(__dirname, 'static/js/**/*.js'),
-    path.join(__dirname, 'theme/templates/**/*.twig')
+    path.join(__dirname, 'theme/templates/**/*.twig'),
+    path.join(__dirname, 'vendor/salthareket/theme/src//templates/**/*.twig')
 ];
 if (enable_ecommerce) {
     paths.push(path.join(__dirname, 'templates/**/*.twig'));
