@@ -184,12 +184,15 @@ class Install {
                 }
             }
         } else {
-            wp_die(
-                sprintf(
-                    '<h2 class="text-danger">Warning</h2>The theme setup is not complete. Please complete the installation from the <a href="%s">Install Salthareket/Theme</a>.',
-                     esc_url(admin_url('admin.php?page=install-packages'))
-                )
-            );
+            //$is_login_page = strpos($_SERVER['REQUEST_URI'], 'wp-login.php') !== false;
+            //if (!is_login_page()) {
+                wp_die(
+                    sprintf(
+                        '<h2 class="text-danger">Warning</h2>The theme setup is not complete. Please complete the installation from the <a href="%s">Install Salthareket/Theme sss</a>.',
+                         esc_url(admin_url('admin.php?page=install-packages'))
+                    )
+                );
+            //}
         }
     }
 }
