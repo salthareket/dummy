@@ -170,6 +170,13 @@ module.exports = {
                     }
                 ],
             },
+            {
+                test: /\.(woff|woff2|eot|ttf|otf)$/i, // Font dosyaları
+                type: 'asset/resource', // Dosyaları çözümle ve kopyala
+                generator: {
+                    filename: '../fonts/[hash][ext][query]', // Yeniden adlandırma (hash ekleme)
+                },
+            },
         ],
     },
     plugins: [
