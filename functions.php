@@ -17,7 +17,6 @@ if (file_exists(__DIR__ . "/vendor/salthareket/theme/src/theme.php")) {
     $theme = new SaltHareket\Theme();
     $theme->init();
 }else{
-    error_log("SaltHareket\Theme yooooooooookk");
     update_option('sh_theme_status', false);
     update_option('sh_theme_tasks_status', []);
     require_once __DIR__ . "/install/install.php";
@@ -26,9 +25,6 @@ if (file_exists(__DIR__ . "/vendor/salthareket/theme/src/theme.php")) {
        return get_template_directory() . '/static/no-theme.html';
     });
 }  
-
-
-error_log("yuklendim yine...");
 
 ini_set('max_execution_time', 1000);
 //remove_action("shutdown", "wp_ob_end_flush_all", 1);
