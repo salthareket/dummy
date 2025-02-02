@@ -69,15 +69,13 @@
    <div class="offcanvas-footer text-center justify-content-center pb-4 {% if offcanvas.fullscreen and offcanvas.container and "footer" in offcanvas.container_apply %}{{function("block_container", offcanvas.container)}} p-2{% endif %}">
 
       {% if enable_mutilanguage and languages|length > 1 %}
-         {% apply spaceless %}
          <ul class="nav-language list-inline" aria-labelledby="language">
             {% for item in languages %}
                <li class="list-inline-item" rel="{{item.name|lower}}">
                   <a href="{{item.url}}" class="btn btn-outline-primary px-3 {% if item.active %}active{% endif %}" title="{{item.name_long}}">{{item.name|upper}}</a>
                </li>
             {% endfor %}
-         </ul>
-         {% endapply %}                    
+         </ul>                
       {% endif %}
 
       {{ accounts|list_social_accounts("mt-3") }}

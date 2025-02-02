@@ -92,11 +92,12 @@
                 <div class="col">
                     <div class="sticky-top">
                         <div class="title-md text-primary fw-700 font-header lh-1 d-sticked py-3">{{post.title}}</div>
-                        <div class="img-placeholder d-block rounded-4 overflow-hidden {% if post.thumbnail %}loading-{% else %}img-not-found{% endif %}"   {% if post.thumbnail %}style="background-color:{{post.thumbnail.average_color}}"{% endif %}>
+                        <div class="img-placeholder d-block rounded-4 overflow-hidden {% if post.thumbnail %}loading-{% else %}img-not-found ratio ratio-16x9{% endif %}" {% if post.thumbnail %}style="background-color:{{post.thumbnail.average_color}};aspect-ratio:{{post.thumbnail.get_aspect_ratio()}}"{% endif %}>
 
                             {% if post.thumbnail %}
-                                {{img({src: post.thumbnail, lazy: false })}}
-                            {% endif %} 
+                                {{post.get_thumbnail({class : "object-fit-cover w-100 h-100", lazy: not is_preview})}}
+                            {% endif %}
+
                         </div>
                     </div>
                 </div>
@@ -106,7 +107,6 @@
                     {{ post.content }}
 
                     {% if post_tags %}
-                    {% apply spaceless %}
                         <ul class="list-tags list-label list-label-sm list-inline my-5">
                         {% for tag in post_tags %}
                             <li class="list-inline-item">
@@ -114,7 +114,6 @@
                             </li>
                         {% endfor %}
                         </ul>
-                    {% endapply %}
                     {% endif %}
 
                     {% if prev or next %}
