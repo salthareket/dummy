@@ -7,7 +7,7 @@
             {% if header_options.start.type == "brand" %}
                 <div class="{{header_options.start.class|replace({ '{{equalize}}' : equalize })}} {% if header_options.start.logo_height %}h-100{% else %}h-inherit{% endif %}">
                     <div class="navbar-brand align-items-{{header_options.start.align}} d-flex {% if logo_affix %}has-logo-affix{% endif %} {% if logo_mobile %}has-logo-mobile{% endif %}">
-                        <a href="{{site.url}}" class="h-100 d-block btn-loading-page" rel="home" itemprop="url" title="{{translate("Anasayfa")}}">
+                        <a href="{{site.url}}" class="mh-100 d-block btn-loading-page" rel="home" itemprop="url" title="{{translate("Anasayfa")}}">
                             {% if function('get_extension', logo) == "svg" %}
                                 {{function('inline_svg', logo, "logo-svg w-auto ")}}
                             {% else %}
@@ -52,7 +52,7 @@
             {% if header_options.center.type == "brand" %}
                 <div class="{{header_options.center.class|replace({ '{{equalize}}' : equalize })}} {% if header_options.start.logo_height %}h-100{% else %}h-inherit{% endif %}">
                     <div class="navbar-brand align-items-{{header_options.center.align}} d-flex {% if logo_affix %}has-logo-affix{% endif %} {% if logo_mobile %}has-logo-mobile{% endif %}">
-                        <a href="{{site.url}}" class="h-100 d-block btn-loading-page" rel="home" itemprop="url" title="{{translate("Anasayfa")}}">
+                        <a href="{{site.url}}" class="mh-100 d-block btn-loading-page" rel="home" itemprop="url" title="{{translate("Anasayfa")}}">
                             {% if function('get_extension', logo) == "svg" %}
                                 {{function('inline_svg', logo, "logo-svg w-auto")}}
                             {% else %}
@@ -96,7 +96,7 @@
             {% if header_options.end.type == "brand" %}
                 <div class="{{header_options.end.class|replace({ '{{equalize}}' : equalize })}} {% if header_options.start.logo_height %}h-100{% else %}h-inherit{% endif %}">
                     <div class="navbar-brand align-items-{{header_options.end.align}} d-flex {% if logo_affix %}has-logo-affix{% endif %} {% if logo_mobile %}has-logo-mobile{% endif %}">
-                        <a href="{{site.url}}" class="h-100 d-block btn-loading-page" rel="home" itemprop="url" title="{{translate("Anasayfa")}}">
+                        <a href="{{site.url}}" class="mh-100 d-block btn-loading-page" rel="home" itemprop="url" title="{{translate("Anasayfa")}}">
                             {% if function('get_extension', logo) == "svg" %}
                                 {{function('inline_svg', logo, "logo-svg w-auto ")}}
                             {% else %}
