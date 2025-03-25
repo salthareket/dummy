@@ -10,14 +10,19 @@
  * happen. When this occurs the version of the template file will be bumped and
  * the readme will list any important changes.
  *
- * @see     https://docs.woocommerce.com/document/template-structure/
- * @package WooCommerce/Templates
- * @version 3.6.0
+ * @see     https://woocommerce.com/document/template-structure/
+ * @package WooCommerce\Templates
+ * @version 9.4.0
  */
 
 defined( 'ABSPATH' ) || exit;
 
 global $product, $wp_query, $woocommerce_loop;
+
+// Check if the product is a valid WooCommerce product and ensure its visibility before proceeding.
+if ( ! is_a( $product, WC_Product::class ) || ! $product->is_visible() ) {
+	return;
+}
 
 if ( empty( $product ) || ! $product->is_visible() ) {
 	echo "hatalı urun";
