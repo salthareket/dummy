@@ -134,7 +134,7 @@
                                         {% if post.book_pages %}
                                         <tr>
                                             <td class="text-nowrap">{{ translate("Sayfa Sayısı") }}</td>
-                                            <td>{{ translate_nooped_plural( _n_noop( '%s Sayfa', '%s Sayfa'))|format(post.meta("book_pages")) }}</td>
+                                            <td>{{ translate_nooped_plural( translate_n_noop( '%s Sayfa', '%s Sayfa'), post.meta("book_pages"))|format(post.meta("book_pages")) }}</td>
                                         </tr>
                                         {% endif %}
                                         {% if post.book_isbn %}
@@ -195,7 +195,7 @@
                         {% if product_type == "grouped" %}
                         <div class="card-series-books card card-reset mt-5">
                             <div class="card-header pb-4">
-                                <h3 class="card-title">{{ translate("Seride yer alan kitaplar") }} <span>({{ translate_nooped_plural( _n_noop( '%s Kitap', '%s Kitaplar'))|format(books|length)}})</span></h3>
+                                <h3 class="card-title">{{ translate("Seride yer alan kitaplar") }} <span>({{ translate_nooped_plural( translate_n_noop( '%s Kitap', '%s Kitaplar'), books|length)|format(books|length)}})</span></h3>
                             </div>
                             <div class="card-body">
                                 {% for book in grouped_books %}
@@ -208,7 +208,7 @@
                                                 <h4 class="title mb-0"><a href="{{book.link}}" class="btn-loading-page" title="{{book.title}}">#{{ loop.index}} {{ book.title }}</a></h4>
                                                 {% set book_author = book.get_author() %}
                                                 <a href="{{book_author.link}}" class="author btn-loading-page" title="{{book_author.title}}">{{book_author.title|upper}}</a>
-                                                <div class="meta mt-2">{{ book.book_release_date|date("Y") }}, {{ translate_nooped_plural( _n_noop( '%s Sayfa', '%s Sayfa'))|format(book.book_pages) }}</div>
+                                                <div class="meta mt-2">{{ book.book_release_date|date("Y") }}, {{ translate_nooped_plural( translate_n_noop( '%s Sayfa', '%s Sayfa'), book.book_pages)|format(book.book_pages) }}</div>
                                             </div>
                                             <div class="col-auto">
                                                 <a href="{{book.link}}" class="btn btn-outline-secondary px-4 btn-loading-page" title="{{book.title}}">{{ translate("Kitap Detayı") }}</a>
@@ -305,7 +305,7 @@
                                         {% if post.book_pages %}
                                         <tr>
                                             <td class="text-nowrap">{{ translate("Sayfa Sayısı") }}</td>
-                                            <td>{{ translate_nooped_plural( _n_noop( '%s Sayfa', '%s Sayfa'))|format(post.meta("book_pages")) }}</td>
+                                            <td>{{ translate_nooped_plural( translate_n_noop( '%s Sayfa', '%s Sayfa'), post.meta("book_pages"))|format(post.meta("book_pages")) }}</td>
                                         </tr>
                                         {% endif %}
                                         {% if post.book_isbn %}
