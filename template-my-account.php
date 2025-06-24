@@ -24,12 +24,14 @@
 Template Name: My Account
 */
 //if (!is_user_logged_in() && WC()->query->get_current_endpoint() != "" ) {
-if (!is_user_logged_in() && get_current_endpoint("my-account") != "" && get_current_endpoint("my-account") != "my-account") {
+
+/*if (!is_user_logged_in() && get_current_endpoint("my-account") != "" && get_current_endpoint("my-account") != "my-account") {
     wp_safe_redirect(get_page_url('musteriler'));
     die;
-}
+}*/
+
 $context = Timber::context();
 $post = Timber::get_post();
 $context['post'] = $post;
-$context['type'] = get_current_endpoint();//getUrlEndpoint();
+$context['type'] = get_current_endpoint() ?? getUrlEndpoint();
 Timber::render( array( 'my-account/index.twig' ), $context );

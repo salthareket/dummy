@@ -11,22 +11,25 @@ $context['sidebar'] = Timber::get_widgets('shop-sidebar');
 
 
 if (is_singular('product')) {
+
     $context['post'] = Timber::get_post();
     $product = wc_get_product($context['post']->ID);
     $context['product'] = $product;
 
     // Get related products
+    $related_products = array();
     $related_limit = wc_get_loop_prop('columns');
     $related_ids = wc_get_related_products($context['post']->id, $related_limit);
-    $context['related_products'] = Timber::get_posts($related_ids);
+    if($related_ids){
+        $related_products = Timber::get_posts($related_ids);
+    }
+    $context['related_products'] = $related_products;
 
-    // Restore the context and loop back to the main query loop.
     wp_reset_postdata();
 
-    Timber::render('woo/single-product.twig', $context);
+    Timber::render('product/single-product.twig', $context);
+
 } else {
-
-
 
     /*global $wp_query;
     $paged = intval($wp_query->query_vars["paged"]);
@@ -117,6 +120,6 @@ if (is_singular('product')) {
 
     
 
-    Timber::render('woo/archive.twig', $context);
+    Timber::render('product/archive.twig', $context);
     //unset($_SESSION["paged_ajax"]);
 }

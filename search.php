@@ -64,4 +64,4 @@ $context['posts'] = Timber::get_posts();
 global $wp_query;
 $context["found_posts"] = $wp_query->found_posts;
 Timber::render(array('search/search.twig'), $context);
-//Timber::render(array('templates/woo/'.$template.'.twig'), $context);
+//Timber::render(array('templates/product/'.$template.'.twig'), $context);
