@@ -46,6 +46,7 @@ const staticSafelist = [
     'table',
     'visible',
     'invisible',
+    /^fixed-/,
     /^svg-/,
     /^fa-file-/,
     /^header-tools-/,

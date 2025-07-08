@@ -121,7 +121,8 @@ class Install {
             'Theme Install',
             'manage_options',
             'install-packages',
-            ['Install', 'render_installation_page'] // Theme Update içeriğini render et
+            ['Install', 'render_installation_page'], // Theme Update içeriğini render et
+            91
         );
 
         // Gereksiz alt menüyü kaldır

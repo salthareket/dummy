@@ -1,5 +1,6 @@
 {
 	"name": "salthareket/dummy",
+    "version": "1.2.5",
     "description": "Dummy theme",
     "license": "MIT",
     "type": "library",
