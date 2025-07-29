@@ -7,6 +7,7 @@ const PrefixWrap = require('postcss-prefixwrap');
 const glob = require('glob-all');
 
 const enable_ecommerce = process.env.enable_ecommerce === 'true'; // PHP'den gelen sabiti al
+const enable_purgecss = false; // 🔥 KOŞULLU hale getirildi — true yaparsan aktif olur
 
 const paths = [
     path.join(__dirname, '../../plugins/**/*.php'),
@@ -41,6 +42,7 @@ const staticSafelist = [
     'fa-tiktok',
     'fa-whatsapp',
     'plyr',
+    'ratio',
     'fade',
     'show',
     'table',
@@ -119,6 +121,78 @@ const staticSafelist = [
 ];
 const combinedSafelist = [...dynamicSafelist, ...staticSafelist];
 
+const plugins = [
+    new MiniCssExtractPlugin({
+        filename: '[name].css',
+    }),
+    {
+        apply: (compiler) => {
+            compiler.hooks.afterEmit.tap('AfterEmitPlugin', (compilation) => {
+                const acfBlocksFilePath = path.resolve(__dirname, 'static/css/main.css');
+                const acfBlocksV1FilePath = path.resolve(__dirname, 'static/css/main-admin.css');
+
+                const acfBlocksContent = fs.readFileSync(acfBlocksFilePath, 'utf8');
+                const prefixedAcfBlocksContent = postcss([PrefixWrap(".acf-block-preview", {
+                    ignoredSelectors: [":root", ".wp-block"],
+                    prefixRootTags: true,
+                })]).process(acfBlocksContent).css;
+
+                fs.writeFileSync(acfBlocksV1FilePath, prefixedAcfBlocksContent);
+            });
+        },
+    },
+    {
+        apply: (compiler) => {
+            compiler.hooks.afterEmit.tap('ExtractFontFacesPlugin', (compilation) => {
+                const iconsCssPath = path.resolve(__dirname, 'static/css/icons.css');
+                const fontFacesCssPath = path.resolve(__dirname, 'static/css/font-faces.css');
+
+                if (!fs.existsSync(iconsCssPath)) {
+                    console.warn('⚠ icons.css bulunamadı.');
+                    return;
+                }
+
+                let content = fs.readFileSync(iconsCssPath, 'utf8');
+                const fontFaceRegex = /@font-face\s*{[^}]+}/gi;
+                const matches = content.match(fontFaceRegex);
+
+                if (matches && matches.length > 0) {
+                    const cleanedFontFaces = matches.map(face => {
+                        return face
+                            .replace(/url\([^)]+?\.(ttf|otf|eot|woff)(\?[^)]*)?\)\s*format\([^)]+\),?/gi, '')
+                            .replace(/,\s*}/g, '}')
+                            .replace(/src:\s*,/g, 'src:');
+                    });
+
+                    fs.writeFileSync(fontFacesCssPath, cleanedFontFaces.join('\n\n'));
+
+                    // icons.css'ten font-face bloklarını çıkar
+                    const cleanedIconsCss = content.replace(fontFaceRegex, '');
+                    fs.writeFileSync(iconsCssPath, cleanedIconsCss);
+
+                    console.log(`✓ font-face blokları temizlendi → font-faces.css oluşturuldu.`);
+                }
+            });
+        }
+    }
+];
+
+// 🔥 Koşullu olarak PurgeCSS eklentisini ekle
+if (enable_purgecss) {
+    plugins.push(
+        new PurgeCSSPlugin({
+            paths: glob.sync(paths),
+            purgeOptions: {
+                rejected: false,
+            },
+            safelist: {
+                standard: combinedSafelist,
+            },
+            keyframes: false,
+        })
+    );
+}
+
 module.exports = {
     mode: 'production',
     entry: {
@@ -127,13 +201,13 @@ module.exports = {
         "header-rtl": path.join(__dirname, 'static/css/header-rtl.css'),
         main: path.join(__dirname, 'static/css/main.css'),
         "main-rtl": path.join(__dirname, 'static/css/main-rtl.css'),
-        "main-combined" : [
+        "main-combined": [
             path.join(__dirname, 'static/css/icons.css'),
             path.join(__dirname, 'static/css/header.css'),
             path.join(__dirname, 'static/css/main.css'),
             path.join(__dirname, 'static/css/blocks.css'),
         ],
-        "main-combined-rtl" : [
+        "main-combined-rtl": [
             path.join(__dirname, 'static/css/icons.css'),
             path.join(__dirname, 'static/css/header-rtl.css'),
             path.join(__dirname, 'static/css/main-rtl.css'),
@@ -141,7 +215,7 @@ module.exports = {
         ],
     },
     output: {
-        path: path.resolve(__dirname, 'static/css/'), // Çıkış klasörü
+        path: path.resolve(__dirname, 'static/css/'),
     },
     resolve: {
         modules: [path.resolve(__dirname, '../../../node_modules/'), 'node_modules'],
@@ -152,66 +226,24 @@ module.exports = {
                 test: /\.css$/,
                 use: [
                     MiniCssExtractPlugin.loader,
-                      'css-loader',
-                      'postcss-loader',
+                    'css-loader',
+                    'postcss-loader',
                     {
                         loader: 'clean-css-loader',
                         options: {
-                            level: 1/*{
-                                1: {
-                                    all: true, // tüm optimizasyonlar
-                                },
-                                2: {
-                                    restructureRules: true, // kuralları yeniden yapılandırma
-                                    removeDuplicateRules: true, // tekrar eden kuralları kaldırma
-                                    removeEmpty: true, // boş kuralları kaldırma
-                                },
-                            }*/
+                            level: 1
                         }
                     }
                 ],
             },
             {
-                test: /\.(woff|woff2|eot|ttf|otf)$/i, // Font dosyaları
-                type: 'asset/resource', // Dosyaları çözümle ve kopyala
+                test: /\.(woff|woff2|eot|ttf|otf)$/i,
+                type: 'asset/resource',
                 generator: {
-                    filename: '../fonts/[hash][ext][query]', // Yeniden adlandırma (hash ekleme)
+                    filename: '../fonts/[hash][ext][query]',
                 },
             },
         ],
     },
-    plugins: [
-        new MiniCssExtractPlugin({
-            filename: '[name].css',
-        }),
-        new PurgeCSSPlugin({
-            paths: glob.sync(paths),
-            purgeOptions: {
-                rejected: false,
-            },
-            safelist: {
-                standard: combinedSafelist,
-            },
-            keyframes: false,
-            //fontFace: true,
-        }),
-        {
-            apply: (compiler) => {
-                compiler.hooks.afterEmit.tap('AfterEmitPlugin', (compilation) => {
-
-                    const acfBlocksFilePath = path.resolve(__dirname, 'static/css/main.css');
-                    const acfBlocksV1FilePath = path.resolve(__dirname, 'static/css/main-admin.css');
-
-                    const acfBlocksContent = fs.readFileSync(acfBlocksFilePath, 'utf8');
-                    const prefixedAcfBlocksContent = postcss([PrefixWrap(".acf-block-preview", {
-                        ignoredSelectors: [":root", ".wp-block"],
-                        prefixRootTags: true,
-                    })]).process(acfBlocksContent).css;
-
-                    fs.writeFileSync(acfBlocksV1FilePath, prefixedAcfBlocksContent);
-
-                });
-            },
-        },
-    ],
+    plugins,
 };
