@@ -197,19 +197,15 @@ module.exports = {
     mode: 'production',
     entry: {
         icons: path.join(__dirname, 'static/css/icons.css'),
-        header: path.join(__dirname, 'static/css/header.css'),
-        "header-rtl": path.join(__dirname, 'static/css/header-rtl.css'),
         main: path.join(__dirname, 'static/css/main.css'),
         "main-rtl": path.join(__dirname, 'static/css/main-rtl.css'),
         "main-combined": [
             path.join(__dirname, 'static/css/icons.css'),
-            path.join(__dirname, 'static/css/header.css'),
             path.join(__dirname, 'static/css/main.css'),
             path.join(__dirname, 'static/css/blocks.css'),
         ],
         "main-combined-rtl": [
             path.join(__dirname, 'static/css/icons.css'),
-            path.join(__dirname, 'static/css/header-rtl.css'),
             path.join(__dirname, 'static/css/main-rtl.css'),
             path.join(__dirname, 'static/css/blocks-rtl.css'),
         ],
