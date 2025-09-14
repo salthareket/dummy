@@ -110,15 +110,29 @@ if ( is_day() ) {
      }
 
 	  $data["tax"] = $term;
+
 	  /*check taxonomy's posttype*/
-	  if ($taxonomy) {
+	 /* if ($taxonomy) {
 		  $taxObject = get_taxonomy($taxonomy);
 		  $postType = $taxObject->object_type[0];
 		  if($postType){
 			  array_unshift( $templates, $postType.'/archive.twig');
 			  array_unshift( $templates, 'archive-'.$postType.'.twig');
 		  }
-	  }
+	  }*/
+
+	  if ($taxonomy) {
+		    $taxObject = get_taxonomy($taxonomy);
+
+		    if ($taxObject && !empty($taxObject->object_type)) {
+		        foreach ((array) $taxObject->object_type as $pt) {
+		            if (!$pt) continue;
+		            array_unshift($templates, $pt . '/archive.twig');
+		            array_unshift($templates, 'archive-' . $pt . '.twig');
+		        }
+		    }
+		}
+
 	  //if (isset($page[0]->name)) {
 		//  $data['title'] = $page[0]->name;
 	  //} else {
