@@ -135,8 +135,6 @@ class Install {
         }, 999); // Geç bir öncelik ile çalıştır
     }
 
-    
-
     public static function install_theme_package(){
         check_ajax_referer('install_theme_nonce', '_ajax_nonce');
         self::composer("salthareket/theme");
@@ -184,6 +182,13 @@ class Install {
                     exit;
                 }
             }
+            add_action('admin_head', function () {
+                $pages = ["install-packages" ];
+                if (isset($_GET['page']) && in_array($_GET['page'], $pages)) {
+                    remove_all_actions('admin_notices');
+                    remove_all_actions('all_admin_notices');
+                }
+            });
         } else {
             //$is_login_page = strpos($_SERVER['REQUEST_URI'], 'wp-login.php') !== false;
             //if (!is_login_page()) {
