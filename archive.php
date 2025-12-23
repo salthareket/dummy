@@ -22,10 +22,9 @@ use Timber\Timber;
 
 global $wp_query;
 $args;
-$templates = array( 'post/archive.twig', 'index.twig' );
+$templates = array( 'post/archive.twig', 'archive.twig', 'index.twig' );
 
 $page_type = "post";
-
 
 $data = Timber::context();
 
@@ -38,7 +37,7 @@ if(array_key_exists("taxonomy", $query_vars)){
 }
 $post_type='';
 if(array_key_exists("post_type", $query_vars)){
-   $post_type=$query_vars['post_type'];
+   $post_type = $query_vars['post_type'];
 }
 
 if ( is_day() ) {
@@ -111,20 +110,12 @@ if ( is_day() ) {
 
 	  $data["tax"] = $term;
 
-	  /*check taxonomy's posttype*/
-	 /* if ($taxonomy) {
-		  $taxObject = get_taxonomy($taxonomy);
-		  $postType = $taxObject->object_type[0];
-		  if($postType){
-			  array_unshift( $templates, $postType.'/archive.twig');
-			  array_unshift( $templates, 'archive-'.$postType.'.twig');
-		  }
-	  }*/
-
 	  if ($taxonomy) {
 		    $taxObject = get_taxonomy($taxonomy);
-
+		    array_unshift( $templates, $taxonomy.'/archive.twig');  
 		    if ($taxObject && !empty($taxObject->object_type)) {
+		    	  $post_type = $taxObject->object_type[0];
+		    	  $data['post_type'] = $post_type;
 		        foreach ((array) $taxObject->object_type as $pt) {
 		            if (!$pt) continue;
 		            array_unshift($templates, $pt . '/archive.twig');
@@ -139,7 +130,7 @@ if ( is_day() ) {
 		  $data['title'] = $term->name;
 		  $data['children'] = $children;
 	  //}
-	  array_unshift( $templates, $taxonomy.'/archive.twig', 'archive.twig');  
+	  
 	  $page_type = "category";
 
 }elseif( is_tax() ){
