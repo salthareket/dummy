@@ -35,6 +35,7 @@ jQuery(document).ready(function ($) {
         .html($message)
         .addClass("show");
     }
+    
     $('#install-theme-button').on('click', function () {
         var $button = $(this);
         $button.prop('disabled', true).text('Installing...');
@@ -62,6 +63,21 @@ jQuery(document).ready(function ($) {
                 $button.prop('disabled', false).text('Start Installation Again');
             }
         });
+    });
+
+    // install.js içine ekle
+    $('#reset-and-start').on('click', function() {
+        if (confirm('Tüm kurulum adımları ve kayıtları sıfırlanacak. Emin misiniz?')) {
+            let $btn = $(this);
+            $btn.prop('disabled', true).text('Sıfırlanıyor...');
+            
+            $.post(installAjax.ajax_url, {
+                action: 'reset_theme_installation_data', // Bu aksiyonu PHP'de tanımlayacağız
+                _ajax_nonce: installAjax.nonce
+            }, function() {
+                location.reload(); // Sayfa yenilenince tertemiz STEP 1 gelecek
+            });
+        }
     });
 
 });

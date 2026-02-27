@@ -8,6 +8,9 @@
  * @subpackage  Timber
  * @since   Timber 0.1
  */
+/*
+Template Name: Search
+*/
 //$query_vars = $wp_query->query_vars;
 
 /*if(is_user_logged_in() && !empty(get_query_var("s"))){
@@ -43,29 +46,30 @@ $product_page_type = "search";
 $context['product_page_type'] = $product_page_type;
 
 $context['is_search'] = is_search();
-$context['keyword'] = implode(" ", get_query_var("search_terms"));//$wp_query->query["s"];
+if(get_query_var("search_terms")){
+   $context['keyword'] = implode(" ", get_query_var("search_terms"));//$wp_query->query["s"];
+}
+
 
 if(function_exists("get_free_shipping_amount")){
     $free_shipping_min_amount = get_free_shipping_amount();
     $context['free_shipping_min_amount']  = $free_shipping_min_amount;  
 }
 
-global $wp_query;
+
 //$context['recently_viewed_products']  = salt_recently_viewed_products();
 
 if($context["keyword"]){
-   $context['title'] = sprintf( translate('%s için arama sonuçları'), '<strong>"'.$context['keyword'].'"</strong>' );
-   //$context['title'] = translate("Tüm sonuçlar");
+   $context['title'] = sprintf( __('%s için arama sonuçları', 'jaguar'), '<strong>"'.$context['keyword'].'"</strong>' ); //get_post_type_object( "product" )->labels->name;
+}else{
+   $context['title'] = trans("Tüm sonuçlar");
 }
 $context["post_types"] = get_post_types_with_taxonomies();
+
+//$context['posts'] = Timber::get_posts();
 $context['posts'] = Timber::get_posts();
 
-
-$found_posts = $wp_query->found_posts;
-$context["found_posts"] = $found_posts;
-if($found_posts){
-
-}else{
-   $context['description'] = translate("İçerik bulunamadı");
-}
+global $wp_query;
+$context["found_posts"] = $wp_query->found_posts;
 Timber::render(array('search/search.twig'), $context);
+//Timber::render(array('templates/product/'.$template.'.twig'), $context);

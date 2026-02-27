@@ -1,4 +1,7 @@
 <?php
+
+
+
 /**
  * The template for displaying all pages.
  *
@@ -105,7 +108,7 @@ switch($api){
     case "google" :
         $data = $_SESSION["saran-groupMeetData"];
         $user_id = $data["user_id"];
-        $user_id = $GLOBALS["user"]->ID;
+        $user_id = Data::get("user.ID");
         
         if($action != "token"){
             $client = getGoogleClient($user_id);

@@ -22,8 +22,11 @@
  */
 
 $context = Timber::context();
-$post = Timber::get_post();
-$context['post'] = $post;
+
+//$post = Timber::get_post();
+//$context['post'] = $post;
+
+$context['post'] = Timber::get_post();
 
 
 /*global $wp_query;

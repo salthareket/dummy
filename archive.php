@@ -14,19 +14,15 @@
  * @since   Timber 0.2
  */
 
-
 namespace App;
-
 use Timber\Timber;
-
 
 global $wp_query;
 $args;
-$templates = array( 'post/archive.twig', 'archive.twig', 'index.twig' );
+$data = Timber::context();
+$templates = array( 'post/archive.twig', 'index.twig' );
 
 $page_type = "post";
-
-$data = Timber::context();
 
 $data['title'] = 'Archive';
 
@@ -90,9 +86,6 @@ if ( is_day() ) {
 	
 } elseif (!empty($taxonomy)) {
 
-	  //$taxonomy = $wp_query->query_vars['taxonomy'];
-	  //$tax = $wp_query->query_vars['term'];
-	
 	  if($wp_query->query_vars["taxonomy"] == $taxonomy){
          $tax = $wp_query->query_vars["term"];
          $data[str_replace("-", "_", $taxonomy)] = $tax;
@@ -108,22 +101,23 @@ if ( is_day() ) {
         $children = Timber::get_terms(array("taxonomy" => $taxonomy, 'parent' => $term->id, "hide_empty" => false));
      }
 
-	  $data["tax"] = $term;
+	   $data["tax"] = $term;
+	   /*check taxonomy's posttype*/
+      array_unshift( $templates, $taxonomy.'/archive.twig', 'archive.twig');  
+		$taxObject = get_taxonomy($taxonomy);
+		// Objeyi kontrol et ve object_type'ın bir dizi olduğundan emin ol
+		if ($taxObject && isset($taxObject->object_type) && is_array($taxObject->object_type)) {
+		    
+		    // 🎯 Anahtar (0) sormadan direkt ilk elemanı alıyoruz. 
+		    // Dizi boşsa $postType false olur ve hata fırlatmaz.
+		    $postType = reset($taxObject->object_type); 
 
-	  if ($taxonomy) {
-		    $taxObject = get_taxonomy($taxonomy);
-		    array_unshift( $templates, $taxonomy.'/archive.twig');  
-		    if ($taxObject && !empty($taxObject->object_type)) {
-		    	  $post_type = $taxObject->object_type[0];
-		    	  $data['post_type'] = $post_type;
-		        foreach ((array) $taxObject->object_type as $pt) {
-		            if (!$pt) continue;
-		            array_unshift($templates, $pt . '/archive.twig');
-		            array_unshift($templates, 'archive-' . $pt . '.twig');
-		        }
+		    if ($postType) {
+		        array_unshift($templates, $postType . '/archive.twig');
+		        array_unshift($templates, 'archive-' . $postType . '.twig');
 		    }
 		}
-
+	  
 	  //if (isset($page[0]->name)) {
 		//  $data['title'] = $page[0]->name;
 	  //} else {
@@ -134,7 +128,6 @@ if ( is_day() ) {
 	  $page_type = "category";
 
 }elseif( is_tax() ){
-	echo "tax page";
 	$page_type = "category";
 }
 

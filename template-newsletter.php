@@ -39,7 +39,17 @@ $context['page_type'] = $page_type;
 $subscriber_id = explode("-",get_query_var('nk'));
 $subscriber_id=$subscriber_id[0];
 //$wp_user_id = $wpdb->get_var("SELECT wp_user_id FROM wp_newsletter where id=".$subscriber_id);
-$subscriber=$wpdb->get_row("SELECT id, token, wp_user_id, email, name, surname, profile_1 as phone, profile_2 as coupons FROM wp_newsletter where id=".$subscriber_id, ARRAY_A);
+global $wpdb;
+
+$subscriber = $wpdb->get_row(
+    $wpdb->prepare(
+        "SELECT id, token, wp_user_id, email, name, surname, profile_1 as phone, profile_2 as coupons 
+         FROM {$wpdb->prefix}newsletter 
+         WHERE id = %d",
+        $subscriber_id
+    ), 
+    ARRAY_A
+);
 $context['subscriber'] = $subscriber;
 
 $newsletter_profile_page_id = get_option( 'newsletter_page' );
@@ -73,8 +83,17 @@ if($reservation_id){
 						),
 						array( 'id' => $subscriber["id"] )
 					);
-					$subscriber=$wpdb->get_row("SELECT id, token, wp_user_id, email, name, surname, profile_1 as phone, profile_2 as coupons FROM wp_newsletter where id=".$subscriber_id, ARRAY_A);
-	                $context['subscriber'] = $subscriber;
+					global $wpdb;
+					$subscriber = $wpdb->get_row(
+					    $wpdb->prepare(
+					        "SELECT id, token, wp_user_id, email, name, surname, profile_1 as phone, profile_2 as coupons 
+					         FROM {$wpdb->prefix}newsletter 
+					         WHERE id = %d",
+					        $subscriber_id
+					    ), 
+					    ARRAY_A
+					);
+	            $context['subscriber'] = $subscriber;
 			    }
 			}
 	   }

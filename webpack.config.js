@@ -193,23 +193,46 @@ if (enable_purgecss) {
     );
 }
 
+const entries = {};
+
+// Dosya kontrol fonksiyonu (Sadece var olanları döndürür)
+const validateEntry = (filePath) => {
+    if (Array.isArray(filePath)) {
+        const filtered = filePath.filter(fp => fs.existsSync(fp));
+        return filtered.length > 0 ? filtered : null;
+    }
+    return fs.existsSync(filePath) ? filePath : null;
+};
+
+// Entry'leri tek tek kontrol ederek ekle
+const checkAndAdd = (name, path) => {
+    const validPath = validateEntry(path);
+    if (validPath) entries[name] = validPath;
+};
+
+checkAndAdd('icons', path.join(__dirname, 'static/css/icons.css'));
+checkAndAdd('header', path.join(__dirname, 'static/css/header.css'));
+checkAndAdd('header-rtl', path.join(__dirname, 'static/css/header-rtl.css'));
+checkAndAdd('main', path.join(__dirname, 'static/css/main.css'));
+checkAndAdd('main-rtl', path.join(__dirname, 'static/css/main-rtl.css'));
+
+checkAndAdd('main-combined', [
+    path.join(__dirname, 'static/css/icons.css'),
+    path.join(__dirname, 'static/css/header.css'),
+    path.join(__dirname, 'static/css/main.css'),
+    path.join(__dirname, 'static/css/blocks.css'),
+]);
+
+checkAndAdd('main-combined-rtl', [
+    path.join(__dirname, 'static/css/icons.css'),
+    path.join(__dirname, 'static/css/header-rtl.css'),
+    path.join(__dirname, 'static/css/main-rtl.css'),
+    path.join(__dirname, 'static/css/blocks-rtl.css'),
+]);
+
 module.exports = {
     mode: 'production',
-    entry: {
-        icons: path.join(__dirname, 'static/css/icons.css'),
-        main: path.join(__dirname, 'static/css/main.css'),
-        "main-rtl": path.join(__dirname, 'static/css/main-rtl.css'),
-        "main-combined": [
-            path.join(__dirname, 'static/css/icons.css'),
-            path.join(__dirname, 'static/css/main.css'),
-            path.join(__dirname, 'static/css/blocks.css'),
-        ],
-        "main-combined-rtl": [
-            path.join(__dirname, 'static/css/icons.css'),
-            path.join(__dirname, 'static/css/main-rtl.css'),
-            path.join(__dirname, 'static/css/blocks-rtl.css'),
-        ],
-    },
+    entry: entries, // Dinamik olarak dolan güvenli obje
     output: {
         path: path.resolve(__dirname, 'static/css/'),
     },
@@ -227,7 +250,11 @@ module.exports = {
                     {
                         loader: 'clean-css-loader',
                         options: {
-                            level: 1
+                            level: {
+                                1: {
+                                    all: true // Temel temizlik (Level 2 hata verdiği için Level 1'de bıraktık)
+                                }
+                            }
                         }
                     }
                 ],
@@ -241,5 +268,5 @@ module.exports = {
             },
         ],
     },
-    plugins,
+    plugins, // Mevcut plugins değişkenin
 };
