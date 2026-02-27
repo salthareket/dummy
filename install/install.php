@@ -218,7 +218,7 @@ class Install {
         wp_send_json_success(['message' => 'Theme package installed successfully.', 'action' => 'install']);
     }
 
-    public sattic function reset_theme_installation_data(){
+    public static function reset_theme_installation_data(){
         check_ajax_referer('install-theme-nonce', '_ajax_nonce');
         update_option('sh_theme_tasks_status', []); // Taskları boşalt
         update_option('sh_theme_status', false);    // Statüyü kapat
