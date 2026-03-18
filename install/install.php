@@ -213,7 +213,7 @@ class Install {
     }
 
     public static function install_theme_package(){
-        check_ajax_referer('install_theme_nonce', '_ajax_nonce');
+        check_ajax_referer('install-theme-nonce', '_ajax_nonce');
         self::composer("salthareket/theme");
         wp_send_json_success(['message' => 'Theme package installed successfully.', 'action' => 'install']);
     }
