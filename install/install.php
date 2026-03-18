@@ -193,13 +193,13 @@ class Install {
 
         // Theme Update alt menüsünü ekle
         add_submenu_page(
-            'theme-settings', // Ana menü slug'ı
+            'theme-settings', 
             'Theme Install',
             'Theme Install',
             'manage_options',
             'install-packages',
-            ['Install', 'render_installation_page'], // Theme Update içeriğini render et
-            91
+            [self::class, 'render_installation_page'] // 7. parametreyi (91) sildik,
+            1
         );
 
         // Gereksiz alt menüyü kaldır
@@ -249,7 +249,7 @@ class Install {
 
         $args = [
             'ajax_url' => admin_url('admin-ajax.php'),
-            'nonce' => wp_create_nonce('install_theme_nonce')
+            'nonce' => wp_create_nonce('install-theme-nonce')
         ];
         wp_localize_script('install-theme-script', 'installAjax', $args);
     }
