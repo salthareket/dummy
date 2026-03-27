@@ -23,18 +23,10 @@
 
 $context = Timber::context();
 
-//$post = Timber::get_post();
-//$context['post'] = $post;
+$post = Timber::get_post();
+$context['post'] = $post;
 
-$context['post'] = Timber::get_post();
-
-
-/*global $wp_query;
-if($wp_query->posts){
-	$context['posts'] = Timber::get_posts();
-}*/
-
-if($post->post_parent > 0){
+if($post && $post->post_parent > 0){
 	$parent_top = get_parent_top($post);
 	$template = get_page_template_slug( $parent_top );
 	if($template == "template-page-merged.php"){

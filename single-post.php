@@ -10,7 +10,7 @@
  */
 //acf_form_head();
 $context = Timber::context();
-$post = $post = Timber::get_post();
+$post = Timber::get_post();
 $context['post'] = $post;
 if ( post_password_required( $post->ID ) ) {
 	Timber::render( 'single-password.twig', $context );

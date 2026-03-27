@@ -7,4 +7,5 @@
  * @subpackage  Timber
  */
 
-Timber::render( array( 'sidebar.twig' ), $data );
+$context = Timber::context();
+Timber::render( array( 'sidebar.twig' ), $context );

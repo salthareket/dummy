@@ -1,5 +1,5 @@
 <?php
-if (!class_exists('Timber')) {
+if (!class_exists('Timber\Timber')) {
     echo 'Timber not activated.';
     return;
 }

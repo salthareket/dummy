@@ -54,8 +54,8 @@ global $wp_query;
 //$context['recently_viewed_products']  = salt_recently_viewed_products();
 
 if($context["keyword"]){
-   $context['title'] = sprintf( translate('%s için arama sonuçları'), '<strong>"'.$context['keyword'].'"</strong>' );
-   //$context['title'] = translate("Tüm sonuçlar");
+   $context['title'] = sprintf( trans('%s için arama sonuçları'), '<strong>"'.$context['keyword'].'"</strong>' );
+   //$context['title'] = trans("Tüm sonuçlar");
 }
 $context["post_types"] = get_post_types_with_taxonomies();
 $context['posts'] = Timber::get_posts();
@@ -66,6 +66,6 @@ $context["found_posts"] = $found_posts;
 if($found_posts){
 
 }else{
-   $context['description'] = translate("İçerik bulunamadı");
+   $context['description'] = trans("İçerik bulunamadı");
 }
 Timber::render(array('search/search.twig'), $context);

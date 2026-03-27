@@ -77,7 +77,7 @@ if($reservation_id){
 	                $user_coupons = remove_element($user_coupons, $coupon_code);
 	                $user_coupons = join(",",$user_coupons);
 				    $wpdb->update(
-						'wp_newsletter',
+						$wpdb->prefix . 'newsletter',
 					    array(
 							'profile_2' => $user_coupons
 						),

@@ -14,6 +14,7 @@ class Install {
 
             if (!file_exists($composer_path)) {
                 wp_send_json_error(['message' => 'composer.json is not found.']);
+                return;
             }
 
             $args = array(
@@ -77,7 +78,7 @@ class Install {
             wp_send_json_success(['message' => $message, "action" => $action ]);
 
         } catch (Exception $e) {
-            wp_send_json_error(['message' => $e->getMessage(), "action" => $action ]);
+            wp_send_json_error(['message' => $e->getMessage(), "action" => "error" ]);
         }
     }
 
@@ -186,19 +187,18 @@ class Install {
             'Theme Settings',
             'manage_options',
             'theme-settings',
-            '', // Ana menü için bir sayfa içeriği yok
-            'dashicons-admin-generic', // Menü simgesi
-            90 // Menü sırası
+            '',
+            'dashicons-admin-generic',
+            90
         );
 
-        // Theme Update alt menüsünü ekle
         add_submenu_page(
             'theme-settings', 
             'Theme Install',
             'Theme Install',
             'manage_options',
             'install-packages',
-            [self::class, 'render_installation_page'] // 7. parametreyi (91) sildik,
+            [self::class, 'render_installation_page'],
             1
         );
 
@@ -206,16 +206,14 @@ class Install {
         add_action('admin_menu', function () {
             global $submenu;
             if (isset($submenu['theme-settings'])) {
-                // İlk alt menü olan "Theme Settings" linkini kaldır
                 unset($submenu['theme-settings'][0]);
             }
-        }, 999); // Geç bir öncelik ile çalıştır
+        }, 999);
     }
 
     public static function install_theme_package(){
         check_ajax_referer('install-theme-nonce', '_ajax_nonce');
         self::composer("salthareket/theme");
-        wp_send_json_success(['message' => 'Theme package installed successfully.', 'action' => 'install']);
     }
 
     public static function reset_theme_installation_data(){
@@ -268,22 +266,32 @@ class Install {
                 }
             }
             add_action('admin_head', function () {
-                $pages = ["install-packages" ];
+                $pages = ["install-packages"];
                 if (isset($_GET['page']) && in_array($_GET['page'], $pages)) {
                     remove_all_actions('admin_notices');
                     remove_all_actions('all_admin_notices');
                 }
             });
         } else {
-            //$is_login_page = strpos($_SERVER['REQUEST_URI'], 'wp-login.php') !== false;
-            //if (!is_login_page()) {
-                wp_die(
-                    sprintf(
-                        '<h2 class="text-danger">Warning</h2>The theme setup is not complete. Please complete the installation from the <a href="%s">Install Salthareket/Theme sss</a>.',
-                         esc_url(admin_url('admin.php?page=install-packages'))
-                    )
-                );
-            //}
+            // REST API, cron, CLI, wp-login gibi request'leri öldürme
+            if (
+                defined('DOING_CRON') && DOING_CRON
+                || defined('REST_REQUEST') && REST_REQUEST
+                || defined('WP_CLI') && WP_CLI
+                || (isset($_SERVER['REQUEST_URI']) && strpos($_SERVER['REQUEST_URI'], 'wp-login.php') !== false)
+                || (isset($_SERVER['REQUEST_URI']) && strpos($_SERVER['REQUEST_URI'], 'wp-json/') !== false)
+                || (isset($_SERVER['REQUEST_URI']) && strpos($_SERVER['REQUEST_URI'], 'xmlrpc.php') !== false)
+            ) {
+                return;
+            }
+            wp_die(
+                sprintf(
+                    '<h2 style="color:#dc3545;">Warning</h2><p>The theme setup is not complete. Please complete the installation from the <a href="%s">admin panel</a>.</p>',
+                    esc_url(admin_url('admin.php?page=install-packages'))
+                ),
+                'Theme Setup Required',
+                ['response' => 503]
+            );
         }
     }
 }
