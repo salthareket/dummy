@@ -22,7 +22,7 @@
  */
 
 $context = Timber::context();
-$post = Timber::get_post();
+$post = new Timber\Post();
 $context['post'] = $post;
 
 $args = array(

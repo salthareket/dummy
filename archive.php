@@ -18,6 +18,7 @@ namespace App;
 use Timber\Timber;
 
 global $wp_query;
+$args;
 $data = Timber::context();
 $templates = array( 'post/archive.twig', 'index.twig' );
 
