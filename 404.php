@@ -7,7 +7,7 @@ namespace App;
 
 use Timber\Timber;
 
-$context = Timber::context();
+$context = function_exists('salt_get_context') ? salt_get_context() : Timber::context();
 $templates = array('404.twig');
 $query_var = get_query_var("post_type");
 

@@ -18,8 +18,7 @@ namespace App;
 use Timber\Timber;
 
 global $wp_query;
-$args;
-$data = Timber::context();
+$data = function_exists('salt_get_context') ? salt_get_context() : Timber::context();
 $templates = array( 'post/archive.twig', 'index.twig' );
 
 $page_type = "post";

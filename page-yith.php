@@ -21,7 +21,7 @@
  * @since    Timber 0.1
  */
 
-$context = Timber::context();
+$context = function_exists('salt_get_context') ? salt_get_context() : Timber::context();
 $post = new Timber\Post();
 $context['post'] = $post;
 

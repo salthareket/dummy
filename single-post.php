@@ -9,7 +9,7 @@
  * @since    Timber 0.1
  */
 //acf_form_head();
-$context = Timber::context();
+$context = function_exists('salt_get_context') ? salt_get_context() : Timber::context();
 $post = $post = Timber::get_post();
 $context['post'] = $post;
 if ( post_password_required( $post->ID ) ) {

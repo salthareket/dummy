@@ -11,5 +11,5 @@
  * @since   Timber 0.1
  */
 
-$GLOBALS['timberContext'] = Timber::context();
+$GLOBALS['timberContext'] = function_exists('salt_get_context') ? salt_get_context() : Timber::context();
 ob_start();

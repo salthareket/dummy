@@ -21,12 +21,19 @@
  * @since    Timber 0.1
  */
 
-$context = Timber::context();
+// Context: _salt_block_context zaten add_to_context'te hazırlandı, tekrar Timber::context() çağırmaya gerek yok
+if ( ! empty( $GLOBALS['_salt_block_context'] ) ) {
+    $context = $GLOBALS['_salt_block_context'];
+} else {
+    $context = Timber::context();
+}
 
-//$post = Timber::get_post();
-//$context['post'] = $post;
+\SaltProfiler::mark('page.php: context ready');
 
-$context['post'] = Timber::get_post();
+// post zaten add_to_context içinde Timber::get_post() ile set edildi
+// Burada tekrar çağırmaya gerek yok
+
+\SaltProfiler::mark('page.php: before render');
 
 
 /*global $wp_query;

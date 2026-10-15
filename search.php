@@ -10,6 +10,12 @@
  * @since      1.0.0
  *
  * CHANGELOG:
+ * 1.2.0 - 2026-08-26
+ *   - Fix: FiboSearch "See All Products" posts_per_page artık General Settings
+ *          Search Pagination ayarından okunuyor (options_search_pagination:
+ *          catalog_rows × catalog_columns). Ayar yoksa WP default posts_per_page'e
+ *          fallback yapılır.
+ *
  * 1.1.0 - 2026-05-03
  *   - Add: FiboSearch "See All" — ?dgwt_wcas=1 geldiğinde product_variation'ları da dahil et
  *   - Add: product_variation exclude_from_search bypass (geçici override)
@@ -73,7 +79,7 @@ if ( class_exists( 'SearchHistory' ) && is_search() ) {
 
 /*
 $templates = array('search-result/archive.twig', 'index.twig' );
-$context = Timber::context();
+$context = function_exists('salt_get_context') ? salt_get_context() : Timber::context();
 
 //$context['archives'] = new TimberArchives();
 
@@ -84,7 +90,7 @@ $context['posts'] = Timber::get_posts();
 Timber::render( $templates, $context );
 */
 
-$context            = Timber::context();
+$context = function_exists('salt_get_context') ? salt_get_context() : Timber::context();
 //$context['sidebar'] = Timber::get_widgets('shop-sidebar');
 
 $is_brand_page = is_tax( 'product_brand' );
@@ -108,27 +114,41 @@ $is_fibo_search = !empty($_GET['dgwt_wcas']);
 $variation_plugin_active = class_exists('XT_WOOVAS') || class_exists('Iconic_WSSV');
 $post_type_param = $_GET['post_type'] ?? '';
 
-if ($is_fibo_search && $variation_plugin_active && $post_type_param === 'product') {
-    // FiboSearch "See All Products" — product + product_variation
+if ($is_fibo_search && $post_type_param === 'product') {
+    // FiboSearch "See All Products"
     $search_term = get_query_var('s') ?: ($_GET['s'] ?? '');
     $paged       = get_query_var('paged') ?: 1;
 
-    global $wp_post_types;
-    $prev_exclude = $wp_post_types['product_variation']->exclude_from_search ?? true;
-    if (isset($wp_post_types['product_variation'])) {
-        $wp_post_types['product_variation']->exclude_from_search = false;
+    // ── posts_per_page: General Settings Search Pagination'dan oku ────────────
+    // options_search_pagination: { paged: bool, catalog_rows: int, catalog_columns: int }
+    $search_pag     = (array) get_option( 'options_search_pagination', [] );
+    $sp_rows        = max( 1, (int) ( $search_pag['catalog_rows']    ?? 0 ) );
+    $sp_cols        = max( 1, (int) ( $search_pag['catalog_columns'] ?? 0 ) );
+    $posts_per_page = ( $sp_rows > 0 && $sp_cols > 0 )
+        ? $sp_rows * $sp_cols
+        : (int) get_option( 'posts_per_page', 10 );
+
+    // Variation plugin aktifse product_variation'ları da dahil et
+    $search_post_types = ['product'];
+    if ( $variation_plugin_active ) {
+        global $wp_post_types;
+        $prev_exclude = $wp_post_types['product_variation']->exclude_from_search ?? true;
+        if (isset($wp_post_types['product_variation'])) {
+            $wp_post_types['product_variation']->exclude_from_search = false;
+        }
+        $search_post_types[] = 'product_variation';
     }
 
     $combined_query = new WP_Query([
         's'                => $search_term,
-        'post_type'        => ['product', 'product_variation'],
+        'post_type'        => $search_post_types,
         'post_status'      => 'publish',
         'paged'            => $paged,
-        'posts_per_page'   => get_option('posts_per_page', 10),
+        'posts_per_page'   => $posts_per_page,
         'suppress_filters' => false,
     ]);
 
-    if (isset($wp_post_types['product_variation'])) {
+    if ( $variation_plugin_active && isset($wp_post_types['product_variation'])) {
         $wp_post_types['product_variation']->exclude_from_search = $prev_exclude;
     }
 
@@ -147,7 +167,7 @@ if ($is_fibo_search && $variation_plugin_active && $post_type_param === 'product
 
 
 if($context["keyword"]){
-   $context['title'] = sprintf( translate('%s için arama sonuçları'), '<strong>"'.$context['keyword'].'"</strong>' );
+   $context['title'] = sprintf( translate('Search results for %s'), '<strong>"'.$context['keyword'].'"</strong>' );
 }
 $context["post_types"] = get_post_types_with_taxonomies();
 
@@ -156,6 +176,6 @@ $context["found_posts"] = $found_posts;
 if($found_posts){
 
 }else{
-   $context['description'] = translate("İçerik bulunamadı");
+   $context['description'] = translate("No content found");
 }
 Timber::render(array('search/search.twig'), $context);

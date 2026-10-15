@@ -24,7 +24,7 @@
 Template Name: Newsletter
 */
 
-$context = Timber::context();
+$context = function_exists('salt_get_context') ? salt_get_context() : Timber::context();
 $post = Timber::get_post();
 $context['post'] = $post;
 

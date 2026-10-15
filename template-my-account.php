@@ -1,37 +1,31 @@
 <?php
 /**
- * The template for displaying all pages.
+ * My Account Page Template
  *
- * This is the template that displays all pages by default.
- * Please note that this is the WordPress construct of pages
- * and that other 'pages' on your WordPress site will use a
- * different template.
+ * WC aktif veya değil — her durumda index.twig render eder.
+ * WC aktifken post.content içindeki [woocommerce_my_account] shortcode'u
+ * çift render yapar — bunu engellemek için shortcode devre dışı bırakılır,
+ * endpoint content doğrudan index.twig içinden do_action ile çağrılır.
  *
- * To generate specific templates for your pages you can use:
- * /mytheme/views/page-mypage.twig
- * (which will still route through this PHP file)
- * OR
- * /mytheme/page-mypage.php
- * (in which case you'll want to duplicate this file and save to the above path)
+ * Template Name: My Account
  *
- * Methods for TimberHelper can be found in the /lib sub-directory
- *
- * @package  WordPress
- * @subpackage  Timber
- * @since    Timber 0.1
+ * @version 2.0.0
  */
-/*
-Template Name: My Account
-*/
-//if (!is_user_logged_in() && WC()->query->get_current_endpoint() != "" ) {
 
-/*if (!is_user_logged_in() && get_current_endpoint("my-account") != "" && get_current_endpoint("my-account") != "my-account") {
-    wp_safe_redirect(get_page_url('musteriler'));
-    die;
-}*/
+defined( 'ABSPATH' ) || exit;
 
-$context = Timber::context();
-$post = Timber::get_post();
+// ── WC aktifken [woocommerce_my_account] shortcode'u devre dışı bırak.
+// index.twig endpoint content'i woocommerce_account_content action ile render eder.
+// Böylece çift form / çift sidebar sorunu ortadan kalkar.
+if ( defined( 'ENABLE_ECOMMERCE' ) && ENABLE_ECOMMERCE ) {
+    remove_shortcode( 'woocommerce_my_account' );
+    // WC navigation'ı da kapat — index.twig kendi sidebar'ını render ediyor.
+    add_filter( 'woocommerce_account_navigation', '__return_false' );
+}
+
+$context         = function_exists( 'salt_get_context' ) ? salt_get_context() : Timber\Timber::context();
+$post            = Timber\Timber::get_post();
 $context['post'] = $post;
-$context['type'] = get_current_endpoint() ?? getUrlEndpoint();
-Timber::render( array( 'my-account/index.twig' ), $context );
+$context['type'] = function_exists( 'get_current_endpoint' ) ? get_current_endpoint() : ( function_exists( 'getUrlEndpoint' ) ? getUrlEndpoint() : '' );
+
+Timber\Timber::render( [ 'my-account/index.twig' ], $context );

@@ -53,27 +53,5 @@ if (file_exists(__DIR__ . "/vendor/salthareket/theme/src/theme.php")) {
     
 }
 
-// CF7 reCAPTCHA scriptlerini sadece form olan sayfalarda yükle
-// Diğer sayfalarda Google'ın third-party cookie'lerini engeller
-add_action('wp_enqueue_scripts', function() {
-    if (!is_singular()) return; // Sadece tekil sayfalarda kontrol et
-    
-    // Sayfada CF7 formu var mı?
-    $post = get_post();
-    if (!$post) return;
-    
-    $has_cf7 = has_shortcode($post->post_content, 'contact-form-7') 
-               || has_shortcode($post->post_content, 'cf7');
-    
-    if (!$has_cf7) {
-        // CF7 script ve style'larını dequeue et
-        wp_dequeue_script('contact-form-7');
-        wp_deregister_script('contact-form-7');
-        wp_dequeue_script('wpcf7-recaptcha');
-        wp_deregister_script('wpcf7-recaptcha');
-        wp_dequeue_script('google-recaptcha');
-        wp_deregister_script('google-recaptcha');
-        wp_dequeue_style('contact-form-7');
-        wp_deregister_style('contact-form-7');
-    }
-}, 99);
+
+
