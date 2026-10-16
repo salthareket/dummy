@@ -1,12 +1,14 @@
 <?php
 
-use Composer\Console\Application;
-use Symfony\Component\Console\Input\ArrayInput;
-use Symfony\Component\Console\Output\BufferedOutput;
-
 class Install {
 
     public static function composer($package_name="", $remove = false) {
+        // Composer API'si için vendor/autoload.php gerekli
+        // Bu nokta sadece AJAX'ta çalışır, o sırada vendor mevcuttur
+        if (file_exists(get_template_directory() . '/vendor/autoload.php')) {
+            require_once get_template_directory() . '/vendor/autoload.php';
+        }
+
         try {
 
             $theme_root = get_template_directory();
@@ -25,10 +27,10 @@ class Install {
                 $args["packages"] = [$package_name];
             }
 
-            $app = new Application();
+            $app = new \Composer\Console\Application();
             $app->setAutoExit(false);
-            $input = new ArrayInput($args);
-            $output = new BufferedOutput();
+            $input = new \Symfony\Component\Console\Input\ArrayInput($args);
+            $output = new \Symfony\Component\Console\Output\BufferedOutput();
             $app->run($input, $output);
 
             $raw_output = $output->fetch();

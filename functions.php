@@ -11,7 +11,8 @@ set_error_handler( function( $errno, $errstr ) {
     return false; // Diğer hataları normal işle
 }, E_USER_NOTICE );
 
-if (file_exists(__DIR__ . "/vendor/autoload.php")) {
+// vendor/salthareket/theme yoksa autoload çalıştırma — fatal'ı önle
+if (file_exists(__DIR__ . "/vendor/autoload.php") && file_exists(__DIR__ . "/vendor/salthareket/theme/src/theme.php")) {
     require_once __DIR__ . "/vendor/autoload.php";
 }
 
